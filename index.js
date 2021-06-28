@@ -28,20 +28,23 @@ app.engine('.hbs', hbs({
 
 app.set('view engine', '.hbs');
 
+//CONEXION A LA BASE DE DATOS
+require('dotenv').config({path: 'variables.env'});
+
+console.log(process.env.DB_URL)
+mongoose.Promise = global.Promise;
+mongoose.connect(process.env.DB_URL,{
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false,
+    useCreateIndex:true
+})
+
+
 //Router
 app.use('/', Router);
-
-
-//EDGAR URIEL TAMAYO 
-//CONEXION A LA BASE DE DATOS
-mongoose.connect(config.db, config.urlParser, (err, res) =>{
-    if(err){
-        console.log('No se pudo conectar ' + err);
-    }
-    else{
-        console.log('Se conecto el servidor');
-        app.listen(config.port, config.host, ()=>{
-            console.log('ejecutando en puerto ' + config.port )
-        })
-    }
-})
+const host = process.env.HOST || '0.0.0.0';
+const port = process.env.PORT || 3500;
+app.listen(port,host, ()=>{
+    console.log('El servidor funciona')
+});
